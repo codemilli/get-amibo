@@ -27,8 +27,7 @@ async function request(url: string) {
 async function iterate() {
   let found;
   for await (let pastTime of timer(200)) {
-    const target = pastTime > 10000 ? targetUrl2 : targetUrl;
-    request(target).then((res) => found = res);
+    request(targetUrl).then((res) => found = res);
     if (found) break;
   }
 }
@@ -45,7 +44,7 @@ async function launchChrome(url: string) {
 async function main(){
   console.log('program start');
   await iterate();
-  await launchChrome(targetUrl2);
+  await launchChrome(targetUrl);
   console.log('program end');
 }
 
