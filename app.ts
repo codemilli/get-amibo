@@ -10,7 +10,6 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 async function* timer(interval: number) {
   const startTime = Date.now();
   while (true) {
-    console.log('timer');
     yield Date.now () - startTime;
     await sleep(interval);
   }
@@ -28,20 +27,25 @@ async function request(url: string) {
 async function iterate() {
   let found;
   for await (let pastTime of timer(200)) {
-    const target = pastTime > 1000 ? targetUrl2 : targetUrl;
+    const target = pastTime > 10000 ? targetUrl2 : targetUrl;
     request(target).then((res) => found = res);
     if (found) break;
   }
 }
 
-async function launchChrome() {
-
+async function launchChrome(url: string) {
+  const options = {
+    logLevel: 'verbose',
+    startingUrl: url,
+    userDataDir: false,
+  };
+  return ChromeLauncher.launch(options);
 }
 
 async function main(){
   console.log('program start');
   await iterate();
-  await launchChrome();
+  await launchChrome(targetUrl2);
   console.log('program end');
 }
 
